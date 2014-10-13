@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery Boilerplate</title>
+		<style>
+			body {
+				font-family: helvetica, arial, sans-serif;
+			}
+			.element {
+				margin:20px auto;
+				background-repeat:no-repeat;
+				background-size:cover;
+				color: #FFF;
+			}
+			.element a {
+				color:#FFF;
+				text-decoration:none;
+			}
+			.element p {
+				background:rgba(0,0,0,.1);
+				display: inline-block;
+				padding:3px 7px;
+				margin:10px;
+				font-size:12px;
+			}
+			.el0 {
+				width:960px;
+				height:300px;
+				background-image:url(1.jpg);
+			}
+			.el1 {
+				width:300px;
+				height:600px;
+				background-image:url(2.jpg);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="element el0">
+			<p>
+				Image Credit: <a href="https://plus.google.com/+googledesign/posts" target="_blank">Google</a>
+			</p>
+		</div>
+		<div class="element el1">
+			<p>
+				Image Credit: <a href="http://jeshoots.com" target="_blank">Jeshoots</a>
+			</p>
+		</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="../dist/jquery.coverrr.js"></script>
+		<script>
+			$(function() {
+				$(".el0").coverrr({
+					duration: 20
+				});
+
+				$(".el1").coverrr({
+					duration: 15
+				});
+			});
+		</script>
+	</body>
+</html>
