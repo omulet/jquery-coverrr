@@ -1,18 +1,25 @@
 {
-	"name": "jquery-coverrr",
-	"version": "0.1",
-	"homepage": "https://github.com/omulet/jquery-coverrr",
-	"authors": [
-		"Bogdan Silivestru <silivestru.net>"
-	],
-	"description": "Bring CSS background-image to life.",
-	"main": "dist/jquery.coverrr.js",
-	"keywords": [
-		"jquery",
-		"plugin",
-		"coverrr"
-		"background-image",
-		"jquery-plugin"
-	],
-	"license": "MIT"
+  "name": "jquery-coverrr",
+  "version": "0.1",
+  "homepage": "https://github.com/omulet/jquery-coverrr",
+  "authors": [
+    "Bogdan Silivestry <bogdan@silivestru.net>"
+  ],
+  "description": "Bring CSS background-image to life.",
+  "main": "dist/jquery.coverrr.js",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "coverrr",
+    "background-image",
+    "jquery-plugin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
