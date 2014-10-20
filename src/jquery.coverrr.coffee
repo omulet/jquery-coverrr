@@ -23,6 +23,7 @@ do ($ = jQuery, window, document) ->
 			@_name = pluginName
 
 			@_el = $ @el
+			@oldSize = [0, 0]
 			@cover = $ '<img>'
 			@img = 
 				src: @getImageSrc()
@@ -38,6 +39,9 @@ do ($ = jQuery, window, document) ->
 		init: =>
 			@convertBgToCover()
 			@update()
+			# If our element changes its dimensions after window resize, update the animation 
+			$(window).smartresize () =>
+				@update() unless @_el.outerWidth() is @oldSize[0] and @_el.outerHeight() is @oldSize[1]
 
 			# console.log @img
 
@@ -58,9 +62,9 @@ do ($ = jQuery, window, document) ->
 			@cover.prependTo @_el
 
 		update: () ->
-			console.log 'update'
 			@id = (((1+Math.random())*0x10000)|0).toString(16).substring(1)
 			elSize = [@_el.outerWidth(), @_el.outerHeight()]
+			@oldSize = elSize
 			elRatio = elSize[0] / elSize[1]
 			
 			@cover[0].style[_css.animation_string] = 'coverrr' +
@@ -169,3 +173,24 @@ do ($ = jQuery, window, document) ->
 			unless $.data @, "plugin_#{pluginName}"
 				$.data @, "plugin_#{pluginName}", new Plugin @, options
 
+	
+	# debouncing function from John Hann
+  # http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+  debounce = (func, threshold, execAsap) ->
+    timeout = undefined
+    debounced = ->
+      delayed = ->
+        func.apply obj, args  unless execAsap
+        timeout = null
+        return
+      obj = this
+      args = arguments
+      if timeout
+        clearTimeout timeout
+      else func.apply obj, args  if execAsap
+      timeout = setTimeout(delayed, threshold or 200)
+      return
+
+  sr = 'smartresize'
+  $.fn[sr] = (fn) ->
+    (if fn then @bind("resize", debounce(fn)) else @trigger(sr))

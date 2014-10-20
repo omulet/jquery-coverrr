@@ -26,6 +26,7 @@
         this._defaults = defaults;
         this._name = pluginName;
         this._el = $(this.el);
+        this.oldSize = [0, 0];
         this.cover = $('<img>');
         this.img = {
           src: this.getImageSrc(),
@@ -42,7 +43,14 @@
 
       Plugin.prototype.init = function() {
         this.convertBgToCover();
-        return this.update();
+        this.update();
+        return $(window).smartresize((function(_this) {
+          return function() {
+            if (!(_this._el.outerWidth() === _this.oldSize[0] && _this._el.outerHeight() === _this.oldSize[1])) {
+              return _this.update();
+            }
+          };
+        })(this));
       };
 
       Plugin.prototype.convertBgToCover = function() {
@@ -68,9 +76,9 @@
 
       Plugin.prototype.update = function() {
         var diff, elRatio, elSize, keyframes, s;
-        console.log('update');
         this.id = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
         elSize = [this._el.outerWidth(), this._el.outerHeight()];
+        this.oldSize = elSize;
         elRatio = elSize[0] / elSize[1];
         this.cover[0].style[_css.animation_string] = 'coverrr' + this.id + ' ' + this.settings.duration + 's ' + this.settings.timingFunction + ' ' + this.settings.delay + 's ' + this.settings.iterationCount + ' ' + this.settings.direction;
         if (elRatio > this.img.ratio) {
@@ -173,11 +181,43 @@
       return document.body.removeChild(el);
     })();
     return $.fn[pluginName] = function(options) {
-      return this.each(function() {
+      var debounce, sr;
+      this.each(function() {
         if (!$.data(this, "plugin_" + pluginName)) {
           return $.data(this, "plugin_" + pluginName, new Plugin(this, options));
         }
       });
+      debounce = function(func, threshold, execAsap) {
+        var debounced, timeout;
+        timeout = void 0;
+        return debounced = function() {
+          var args, delayed, obj;
+          delayed = function() {
+            if (!execAsap) {
+              func.apply(obj, args);
+            }
+            timeout = null;
+          };
+          obj = this;
+          args = arguments;
+          if (timeout) {
+            clearTimeout(timeout);
+          } else {
+            if (execAsap) {
+              func.apply(obj, args);
+            }
+          }
+          timeout = setTimeout(delayed, threshold || 200);
+        };
+      };
+      sr = 'smartresize';
+      return $.fn[sr] = function(fn) {
+        if (fn) {
+          return this.bind("resize", debounce(fn));
+        } else {
+          return this.trigger(sr);
+        }
+      };
     };
   })(jQuery, window, document);
 
